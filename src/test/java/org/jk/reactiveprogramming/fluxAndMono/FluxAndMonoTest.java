@@ -2,6 +2,7 @@ package org.jk.reactiveprogramming.fluxAndMono;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 public class FluxAndMonoTest {
@@ -62,6 +63,22 @@ public class FluxAndMonoTest {
         StepVerifier.create(stringFlux)
                 .expectNext("Spring", "Spring Boot", "Reactive Spring")
                 .expectErrorMessage("Intentionally throwing error.")
+                .verify();
+    }
+
+    @Test
+    public void monoTest(){
+        Mono<String> stringMono = Mono.just("Spring")
+                .log();
+        StepVerifier.create(stringMono)
+                .expectNext("Spring")
+                .verifyComplete();
+    }
+
+    @Test
+    public void monoTest_Error(){
+        StepVerifier.create(Mono.error(new RuntimeException()))
+                .expectError(RuntimeException.class).log()
                 .verify();
     }
 }
