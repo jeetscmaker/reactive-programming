@@ -28,4 +28,40 @@ public class FluxAndMonoTest {
                 .expectNext("Reactive Spring")
                 .verifyComplete();
     }
+
+    @Test
+    public void fluxTestElements_WithErrors(){
+        Flux<String> stringFlux = Flux.just("Spring", "Spring Boot", "Reactive Spring")
+                .concatWith(Flux.error(new Throwable("Intentionally throwing error.")))
+                .log();
+        StepVerifier.create(stringFlux)
+                .expectNext("Spring")
+                .expectNext("Spring Boot")
+                .expectNext("Reactive Spring")
+//                .expectError(Throwable.class)
+                .expectErrorMessage("Intentionally throwing error.")
+                .verify();
+    }
+
+    @Test
+    public void fluxTestElementCount_WithErrors(){
+        Flux<String> stringFlux = Flux.just("Spring", "Spring Boot", "Reactive Spring")
+                .concatWith(Flux.error(new Throwable("Intentionally throwing error.")))
+                .log();
+        StepVerifier.create(stringFlux)
+                .expectNextCount(3)
+                .expectErrorMessage("Intentionally throwing error.")
+                .verify();
+    }
+
+    @Test
+    public void fluxTestElements_WithErrors1(){
+        Flux<String> stringFlux = Flux.just("Spring", "Spring Boot", "Reactive Spring")
+                .concatWith(Flux.error(new Throwable("Intentionally throwing error.")))
+                .log();
+        StepVerifier.create(stringFlux)
+                .expectNext("Spring", "Spring Boot", "Reactive Spring")
+                .expectErrorMessage("Intentionally throwing error.")
+                .verify();
+    }
 }
