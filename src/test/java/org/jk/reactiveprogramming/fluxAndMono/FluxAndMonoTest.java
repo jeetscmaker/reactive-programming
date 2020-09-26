@@ -2,6 +2,7 @@ package org.jk.reactiveprogramming.fluxAndMono;
 
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 public class FluxAndMonoTest {
     @Test
@@ -15,5 +16,16 @@ public class FluxAndMonoTest {
         stringFlux.subscribe(System.out::println,
                 e -> System.err.println(e),
                 () -> System.out.println("Completed"));
+    }
+
+    @Test
+    public void fluxTestElements_WithoutErrors(){
+        Flux<String> stringFlux = Flux.just("Spring", "Spring Boot", "Reactive Spring")
+                .log();
+        StepVerifier.create(stringFlux)
+                .expectNext("Spring")
+                .expectNext("Spring Boot")
+                .expectNext("Reactive Spring")
+                .verifyComplete();
     }
 }
